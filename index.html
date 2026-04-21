@@ -284,62 +284,65 @@
   </main>
 
   <script>
-    // ====== CONFIG: replace with Muthoni's phone number in international format (no +, no spaces) ======
-    const PHONE_NUMBER = '+254758130962';
-    // const PHONE_NUMBER = '+254715017200';
+  // ====== CONFIG ======
+  const PHONE_NUMBER = '254758130962'; // NO +
 
-    document.getElementById('year').textContent = new Date().getFullYear();
-    document.getElementById('displayPhone').textContent = PHONE_NUMBER.replace(/^([0-9]{3})([0-9]+)/, '+$1 $2');
+  document.getElementById('year').textContent = new Date().getFullYear();
+  document.getElementById('displayPhone').textContent = '+' + PHONE_NUMBER;
 
-    // Mobile menu toggle
-    const mobileToggle = document.getElementById('mobileToggle');
-    const mobileMenu = document.getElementById('mobileMenu');
-    mobileToggle.addEventListener('click', ()=> mobileMenu.classList.toggle('hidden'));
+  // Mobile menu toggle
+  const mobileToggle = document.getElementById('mobileToggle');
+  const mobileMenu = document.getElementById('mobileMenu');
+  mobileToggle.addEventListener('click', ()=> mobileMenu.classList.toggle('hidden'));
 
-    // Quick WhatsApp button from outsourcing section
-    document.getElementById('whatsappQuick').addEventListener('click', (e)=>{
-      e.preventDefault();
-      const text = encodeURIComponent('Hello Muthoni, I am interested in your outsourcing services. Please advise on next steps.');
-      window.open(`https://wa.me/${PHONE_NUMBER}?text=${text}`, '_blank');
-    });
+  // WhatsApp quick button (still works normally)
+  document.getElementById('whatsappQuick').addEventListener('click', (e)=>{
+    e.preventDefault();
+    const text = encodeURIComponent('Hello Muthoni, I am interested in your outsourcing services.');
+    window.open(`https://wa.me/${PHONE_NUMBER}?text=${text}`, '_blank');
+  });
 
-    // Contact form behaviour: send to WhatsApp with prefilled message. Also demonstrates where server-side call could be placed.
-    const form = document.getElementById('contactForm');
-    const formMessage = document.getElementById('formMessage');
+  // ====== NEW FORM LOGIC (SENDS TO BACKEND) ======
+  const form = document.getElementById('contactForm');
+  const formMessage = document.getElementById('formMessage');
 
-    form.addEventListener('submit', async (e)=>{
-      e.preventDefault();
-      formMessage.textContent = '';
-      const data = Object.fromEntries(new FormData(form).entries());
+  form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
 
-      // Build WhatsApp message
-      const waText = encodeURIComponent(`New enquiry from website:\nName: ${data.name}\nEmail: ${data.email}\nCountry: ${data.country || 'N/A'}\nMessage: ${data.message}`);
+    formMessage.innerHTML = '<span class="text-sm text-gray-600">Sending...</span>';
 
-      // Optional: If you have a backend endpoint that will forward the message to a secure WhatsApp Business API or DB, you can POST here.
-      // Example (commented):
-      // try {
-      //   const res = await fetch('/api/send-enquiry', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data)});
-      // } catch(err) { console.error(err); }
+    const data = Object.fromEntries(new FormData(form).entries());
 
-      // Fallback / immediate: open WhatsApp chat with prefilled text.
-      const waUrl = `https://wa.me/${PHONE_NUMBER}?text=${waText}`;
+    try {
+      const res = await fetch('/api/send-enquiry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
 
-      // Open in new tab (user can review and click send in WhatsApp web or mobile)
-      window.open(waUrl, '_blank');
+      if(res.ok){
+        formMessage.innerHTML = '<span class="text-sm text-green-600">✅ Message received. We will contact you shortly.</span>';
+        form.reset();
+      } else {
+        throw new Error('Failed');
+      }
 
-      formMessage.innerHTML = '<span class="text-sm text-green-600">Your message is being prepared for WhatsApp. Please send it from the opened WhatsApp window to complete submission.</span>';
+    } catch(err){
+      formMessage.innerHTML = '<span class="text-sm text-red-600">❌ Something went wrong. Please try again.</span>';
+    }
+  });
 
-      // Reset form optionally
-      // form.reset();
-    });
+  // Scroll to contact
+  document.getElementById('bookBtn').addEventListener('click', (e)=>{
+    e.preventDefault();
+    document.getElementById('contact').scrollIntoView({behavior:'smooth'});
+  });
 
-    // Booking button scroll and mobile accessibility
-    document.getElementById('bookBtn').addEventListener('click', (e)=>{ e.preventDefault(); document.getElementById('contact').scrollIntoView({behavior:'smooth'}); });
+  mobileToggle.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter') mobileMenu.classList.toggle('hidden');
+  });
+</script>
 
-    // Simple keyboard accessibility: allow Enter on mobile toggle
-    mobileToggle.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') mobileMenu.classList.toggle('hidden'); });
-
-    // keep focus order logical for keyboard users (small enhancement, not a full-a11y audit)
-  </script>
+  <!-- atsk_819977711b3d100afdee2e6ede8cbb47dbc7326c33f738d4c9d5bcb35135f84300f237ae -->
 </body>
 </html>
