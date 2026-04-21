@@ -15,11 +15,11 @@ Message: ${message}`;
     const response = await fetch("https://api.africastalking.com/version1/messaging", {
       method: "POST",
       headers: {
-        "apiKey": "atsk_dd203e13781167de99500a73d90e39f47dfd32e82b380b0442d9f7e7e90a51c24b811a11",
+        "apiKey": "atsk_8cfabef87abc100870ab89907c2a388c47c365599ee3a6574222697cad9e728394c1aaf9",
         "Content-Type": "application/x-www-form-urlencoded"
       },
       body: new URLSearchParams({
-        username: "t5-muthoni",
+        username: "sandbox",
         to: "254758130962",
         message: text
       })
