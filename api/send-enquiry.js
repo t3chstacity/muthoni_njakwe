@@ -19,7 +19,7 @@ Message: ${message}`;
         "Content-Type": "application/x-www-form-urlencoded"
       },
       body: new URLSearchParams({
-        username: " t5-muthoni",
+        username: "t5-muthoni",
         to: "254758130962",
         message: text
       })
