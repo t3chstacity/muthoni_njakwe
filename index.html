@@ -279,13 +279,14 @@
           <p class="text-sm text-slate-300 mt-2">WhatsApp: <span id="displayPhone">+254715 017 200</span></p>
         </div>
       </div>
-      <div class="text-center text-xs text-slate-500 mt-8">© <span id="year"></span> Muthoni Njakwe — All rights reserved.</div>
+      <div class="text-center text-xs text-slate-500 mt-8">© <span id="year"></span> Muthoni Njakwe — All rights reserved. Website developed by <a href="https://techstacity.vercel.app" class="underline">Techstacity Branding</a></div>
     </footer>
   </main>
 
   <script>
     // ====== CONFIG: replace with Muthoni's phone number in international format (no +, no spaces) ======
-    const PHONE_NUMBER = '+254715017200';
+    const PHONE_NUMBER = '+254758130962';
+    // const PHONE_NUMBER = '+254715017200';
 
     document.getElementById('year').textContent = new Date().getFullYear();
     document.getElementById('displayPhone').textContent = PHONE_NUMBER.replace(/^([0-9]{3})([0-9]+)/, '+$1 $2');
