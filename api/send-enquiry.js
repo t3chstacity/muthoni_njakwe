@@ -15,23 +15,28 @@ Message: ${message}`;
     const response = await fetch("https://api.africastalking.com/version1/messaging", {
       method: "POST",
       headers: {
-        "apiKey": "atsk_8cfabef87abc100870ab89907c2a388c47c365599ee3a6574222697cad9e728394c1aaf9",
+        // Use process.env if you set it up in Vercel, otherwise paste the NEW key here for a quick test
+        "apiKey": "atsk_a4a3fd4d9f1a9ecf44a91ee5f315df4ee4f2fef3a1fd20b8fcfec206b484625b4852f3c7", 
         "Content-Type": "application/x-www-form-urlencoded"
       },
       body: new URLSearchParams({
-        username: "sandbox",
+        username: "sandbox", // Double check this matches your dashboard exactly
         to: "254758130962",
         message: text
       })
     });
 
+    const result = await response.text(); // Capture the actual error message from AT
+    
     if (!response.ok) {
-      throw new Error("Failed to send SMS");
+      console.error("AfricasTalking Error:", result);
+      return res.status(response.status).json({ error: result });
     }
 
     return res.status(200).json({ success: true });
 
   } catch (error) {
-    return res.status(500).json({ error: "Failed to send message" });
+    console.error("Server Error:", error);
+    return res.status(500).json({ error: error.message });
   }
 }
